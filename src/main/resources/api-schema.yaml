@@ -120,7 +120,7 @@ paths:
                 $ref: "#/components/schemas/Task"
     patch:
       summary: "タスク完了"
-      description: "指定されたIDのタスクが完了したことを保存"
+      description: "指定されたIDのタスクの完了フラグを変更"
       tags:
         - task
       operationId: finish
@@ -128,7 +128,7 @@ paths:
         - name: taskId
           in: path
           required: true
-          description: "完了するタスクのID"
+          description: "フラグを変更するタスクのID"
           schema:
             type: integer
             format: int64
@@ -193,7 +193,7 @@ components:
     TaskPatch:
       type: object
       properties:
-        finished:
+        finishedFlg:
           type: boolean
           description: "タスクが完了したかの判定"
     ResourceNotFoundError:
