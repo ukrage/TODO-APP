@@ -36,7 +36,7 @@ paths:
     post:
       summary: "タスク作成"
       description: "タスクを新規作成します"
-      operationId: createTask
+      operationId: create
       tags:
         - task
       requestBody:
@@ -62,7 +62,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/BadRequestError"
+                $ref: "#/components/schemas/ExceptionError"
   /tasks/{taskId}:
     get:
       summary: "タスク取得"
@@ -90,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ResourceNotFoundError"
+                $ref: "#/components/schemas/ExceptionError"
     put:
       summary: "タスク変更"
       description: "指定されたIDのタスクの内容を変更します"
@@ -196,7 +196,7 @@ components:
         finishedFlg:
           type: boolean
           description: "タスクが完了したかの判定"
-    ResourceNotFoundError:
+    ExceptionError:
       description: "指定したリソースが存在しない"
       type: object
       properties:
@@ -220,36 +220,4 @@ components:
         - error
         - message
         - path
-    BadRequestError:
-      description: "リクエストが不正"
-      type: object
-      properties:
-        title:
-          type: string
-          description: "エラーのタイトル"
-          default: "Bad Request"
-        detail:
-          type: string
-          description: "エラーの詳細"
-          default: "リクエストが不正です。正しいリクエストでリトライしてください。"
-        invalid-params:
-          type: array
-          items:
-            $ref: "#/components/schemas/InvalidParam"
-      required:
-        - title
-        - detail
-        - invalid-params
-    InvalidParam:
-      description: "不正なリクエストについての詳細"
-      type: object
-      properties:
-        name:
-          type: string
-          description: "エラーが発生したフィールド名"
-        reason:
-          type: string
-          description: "エラーの理由"
-      required:
-        - name
-        - reason
+

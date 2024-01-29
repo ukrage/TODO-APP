@@ -22,4 +22,10 @@ public class MyBatisTaskRepository implements TaskRepository {
     public Optional<Task> findById(Integer id) {
         return taskMapper.findById(id);
     }
+
+    @Override
+    public Task insert(Task task) {
+        taskMapper.insert(task);
+        return task;
+    }
 }

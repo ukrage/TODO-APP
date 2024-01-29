@@ -1,5 +1,6 @@
 package com.urkg.todoapi.api.service;
 
+import com.urkg.todoapi.api.controller.request.CreateRequest;
 import com.urkg.todoapi.api.exception.TaskNotFoundException;
 import com.urkg.todoapi.domain.model.Task;
 import com.urkg.todoapi.domain.service.TaskDomainService;
@@ -27,5 +28,9 @@ public class TaskService {
         } else {
             throw new TaskNotFoundException("Task not found");
         }
+    }
+
+    public Task insert(CreateRequest createRequest) {
+        return taskDomainService.insert(createRequest);
     }
 }
