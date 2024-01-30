@@ -23,4 +23,7 @@ public interface TaskMapper {
 
     @Update("UPDATE tasks SET finishedFlg = #{finishedFlg} WHERE id = #{id}")
     void patch(Task task);
+
+    @Delete("DELETE FROM tasks WHERE id = #{id}")
+    void delete(Long id);
 }

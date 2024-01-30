@@ -40,4 +40,9 @@ public class MyBatisTaskRepository implements TaskRepository {
         taskMapper.patch(task);
         return task;
     }
+
+    @Override
+    public void delete(Long id) {
+        taskMapper.delete(id);
+    }
 }

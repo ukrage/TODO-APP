@@ -51,4 +51,13 @@ public class TaskService {
             throw new TaskNotFoundException("Task not found");
         }
     }
+
+    public void delete(Long id) {
+        Optional<Task> task = taskDomainService.findById(id);
+        if (task.isPresent()) {
+            taskDomainService.delete(id);
+        } else {
+            throw new TaskNotFoundException("Task not found");
+        }
+    }
 }

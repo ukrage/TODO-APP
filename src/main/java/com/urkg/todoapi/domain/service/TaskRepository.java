@@ -15,4 +15,6 @@ public interface TaskRepository {
     Task update(Task task);
 
     Task patch(Task task);
+
+    void delete(Long id);
 }

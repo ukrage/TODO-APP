@@ -39,4 +39,8 @@ public class TaskDomainService {
         task.setFinishedFlg(finishedFlg);
         return taskRepository.patch(task);
     }
+
+    public void delete(Long id) {
+        taskRepository.delete(id);
+    }
 }

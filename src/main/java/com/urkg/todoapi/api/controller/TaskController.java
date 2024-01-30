@@ -47,4 +47,10 @@ public class TaskController {
     public Task patch(@PathVariable Long taskId, @RequestBody PatchRequest patchRequest) {
         return taskService.patch(taskId, patchRequest.isFinishedFlg());
     }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<Void> delete(@PathVariable Long taskId) {
+        taskService.delete(taskId);
+        return ResponseEntity.noContent().build();
+    }
 }
