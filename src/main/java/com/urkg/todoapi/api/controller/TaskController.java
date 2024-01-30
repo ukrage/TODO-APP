@@ -1,5 +1,6 @@
 package com.urkg.todoapi.api.controller;
 
+import com.urkg.todoapi.api.controller.request.PatchRequest;
 import com.urkg.todoapi.api.controller.request.TaskRequest;
 import com.urkg.todoapi.api.service.TaskService;
 import com.urkg.todoapi.domain.model.Task;
@@ -40,5 +41,10 @@ public class TaskController {
     @PutMapping("/{taskId}")
     public Task update(@PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
         return taskService.update(taskId, taskRequest);
+    }
+
+    @PatchMapping("/{taskId}")
+    public Task patch(@PathVariable Long taskId, @RequestBody PatchRequest patchRequest) {
+        return taskService.patch(taskId, patchRequest.isFinishedFlg());
     }
 }

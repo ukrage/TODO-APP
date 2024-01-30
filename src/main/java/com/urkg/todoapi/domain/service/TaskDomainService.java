@@ -34,4 +34,9 @@ public class TaskDomainService {
         task.setContent(taskRequest.getContent());
         return taskRepository.update(task);
     }
+
+    public Task patch(Task task, boolean finishedFlg) {
+        task.setFinishedFlg(finishedFlg);
+        return taskRepository.patch(task);
+    }
 }

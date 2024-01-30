@@ -20,4 +20,7 @@ public interface TaskMapper {
 
     @Update("UPDATE tasks SET title = #{title}, content = #{content} WHERE id = #{id}")
     void update(Task task);
+
+    @Update("UPDATE tasks SET finishedFlg = #{finishedFlg} WHERE id = #{id}")
+    void patch(Task task);
 }

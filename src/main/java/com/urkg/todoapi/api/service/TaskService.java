@@ -42,4 +42,13 @@ public class TaskService {
             throw new TaskNotFoundException("Task not found");
         }
     }
+
+    public Task patch(Long id, boolean finishedFlg) {
+        Optional<Task> task = taskDomainService.findById(id);
+        if (task.isPresent()) {
+            return taskDomainService.patch(task.get(), finishedFlg);
+        } else {
+            throw new TaskNotFoundException("Task not found");
+        }
+    }
 }

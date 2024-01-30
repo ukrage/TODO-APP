@@ -34,4 +34,10 @@ public class MyBatisTaskRepository implements TaskRepository {
         taskMapper.update(task);
         return task;
     }
+
+    @Override
+    public Task patch(Task task) {
+        taskMapper.patch(task);
+        return task;
+    }
 }

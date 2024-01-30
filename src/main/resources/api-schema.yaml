@@ -123,7 +123,7 @@ paths:
       description: "指定されたIDのタスクの完了フラグを変更"
       tags:
         - task
-      operationId: finish
+      operationId: patch
       parameters:
         - name: taskId
           in: path
@@ -137,10 +137,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TaskPatch"
+              $ref: "#/components/schemas/PatchRequest"
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
     delete:
       summary: "タスク削除"
       description: "指定されたIDのタスクを削除します"
@@ -190,7 +194,7 @@ components:
       required:
         - id
         - title
-    TaskPatch:
+    PatchRequest:
       type: object
       properties:
         finishedFlg:

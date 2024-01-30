@@ -13,4 +13,6 @@ public interface TaskRepository {
     Task insert(Task task);
 
     Task update(Task task);
+
+    Task patch(Task task);
 }
