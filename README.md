@@ -11,7 +11,7 @@
 
 * IntelliJ IDEA
 * 言語：Java17
-* フレームワーク：Spring Framework v3.2.2
+* フレームワーク：Spring boot v3.2.2
 * DB：H2 Database
 * 環境：Windows11
 * ソース管理：Git

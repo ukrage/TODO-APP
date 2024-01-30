@@ -96,7 +96,7 @@ paths:
       description: "指定されたIDのタスクの内容を変更します"
       tags:
         - task
-      operationId: change
+      operationId: update
       parameters:
         - name: taskId
           in: path
