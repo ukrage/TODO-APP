@@ -1,14 +1,11 @@
 package com.urkg.todoapi.api.controller;
 
-import com.urkg.todoapi.api.controller.request.CreateRequest;
+import com.urkg.todoapi.api.controller.request.TaskRequest;
 import com.urkg.todoapi.api.service.TaskService;
 import com.urkg.todoapi.domain.model.Task;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,16 +24,21 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public Task findById(@PathVariable Integer taskId) {
+    public Task findById(@PathVariable Long taskId) {
         return taskService.findById(taskId);
     }
 
     @PostMapping
     public ResponseEntity<Task> create(
-            @RequestBody @Valid CreateRequest createRequest,
+            @RequestBody @Valid TaskRequest taskRequest,
             UriComponentsBuilder uriComponentsBuilder) {
-        Task task = taskService.insert(createRequest);
+        Task task = taskService.insert(taskRequest);
         URI uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(task.getId()).toUri();
         return ResponseEntity.created(uri).body(task);
+    }
+
+    @PutMapping("/{taskId}")
+    public Task update(@PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
+        return taskService.update(taskId, taskRequest);
     }
 }

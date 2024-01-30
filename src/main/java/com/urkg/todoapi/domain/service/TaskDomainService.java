@@ -1,6 +1,6 @@
 package com.urkg.todoapi.domain.service;
 
-import com.urkg.todoapi.api.controller.request.CreateRequest;
+import com.urkg.todoapi.api.controller.request.TaskRequest;
 import com.urkg.todoapi.domain.model.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,15 +17,21 @@ public class TaskDomainService {
         return taskRepository.findAll();
     }
 
-    public Optional<Task> findById(Integer id) {
+    public Optional<Task> findById(Long id) {
         return taskRepository.findById(id);
     }
 
-    public Task insert(CreateRequest createRequest) {
+    public Task insert(TaskRequest taskRequest) {
         Task task = new Task();
-        task.setTitle(createRequest.getTitle());
-        task.setContent(createRequest.getContent());
+        task.setTitle(taskRequest.getTitle());
+        task.setContent(taskRequest.getContent());
         task.setFinishedFlg(false);
         return taskRepository.insert(task);
+    }
+
+    public Task update(Task task, TaskRequest taskRequest) {
+        task.setTitle(taskRequest.getTitle());
+        task.setContent(taskRequest.getContent());
+        return taskRepository.update(task);
     }
 }

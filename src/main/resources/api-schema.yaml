@@ -44,7 +44,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TaskForm"
+              $ref: "#/components/schemas/TaskRequest"
       responses:
         201:
           description: "Created"
@@ -110,7 +110,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TaskForm"
+              $ref: "#/components/schemas/TaskRequest"
       responses:
         '200':
           description: OK
@@ -160,7 +160,7 @@ paths:
           description: No content
 components:
   schemas:
-    TaskForm:
+    TaskRequest:
       type: object
       properties:
         title:

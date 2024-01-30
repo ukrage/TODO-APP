@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateRequest {
+public class TaskRequest {
     @NotNull
     @Size(min = 1, max = 50, message = "titleは1文字以上２５５文字以下してください。")
     private String title;

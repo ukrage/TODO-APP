@@ -1,6 +1,6 @@
 package com.urkg.todoapi.api.service;
 
-import com.urkg.todoapi.api.controller.request.CreateRequest;
+import com.urkg.todoapi.api.controller.request.TaskRequest;
 import com.urkg.todoapi.api.exception.TaskNotFoundException;
 import com.urkg.todoapi.domain.model.Task;
 import com.urkg.todoapi.domain.service.TaskDomainService;
@@ -21,7 +21,7 @@ public class TaskService {
         return taskDomainService.findAll();
     }
 
-    public Task findById(Integer id) {
+    public Task findById(Long id) {
         Optional<Task> task = taskDomainService.findById(id);
         if (task.isPresent()) {
             return task.get();
@@ -30,7 +30,16 @@ public class TaskService {
         }
     }
 
-    public Task insert(CreateRequest createRequest) {
-        return taskDomainService.insert(createRequest);
+    public Task insert(TaskRequest taskRequest) {
+        return taskDomainService.insert(taskRequest);
+    }
+
+    public Task update(Long id, TaskRequest taskRequest) {
+        Optional<Task> task = taskDomainService.findById(id);
+        if (task.isPresent()) {
+            return taskDomainService.update(task.get(), taskRequest);
+        } else {
+            throw new TaskNotFoundException("Task not found");
+        }
     }
 }

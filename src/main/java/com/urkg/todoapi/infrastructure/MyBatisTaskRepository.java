@@ -19,13 +19,19 @@ public class MyBatisTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Optional<Task> findById(Integer id) {
+    public Optional<Task> findById(Long id) {
         return taskMapper.findById(id);
     }
 
     @Override
     public Task insert(Task task) {
         taskMapper.insert(task);
+        return task;
+    }
+
+    @Override
+    public Task update(Task task) {
+        taskMapper.update(task);
         return task;
     }
 }
