@@ -17,9 +17,9 @@
 * ソース管理：Git
 * プロジェクト管理：GitHub
 
-## API設計図
+## API仕様書
 
-後日掲載
+https://ukrage.github.io/todo-app/swagger/
 
 ## DB定義
 
