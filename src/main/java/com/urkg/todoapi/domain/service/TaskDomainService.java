@@ -21,22 +21,16 @@ public class TaskDomainService {
         return taskRepository.findById(id);
     }
 
-    public Task insert(TaskRequest taskRequest) {
-        Task task = new Task();
-        task.setTitle(taskRequest.getTitle());
-        task.setContent(taskRequest.getContent());
+    public Task insert(Task task) {
         task.setFinishedFlg(false);
         return taskRepository.insert(task);
     }
 
-    public Task update(Task task, TaskRequest taskRequest) {
-        task.setTitle(taskRequest.getTitle());
-        task.setContent(taskRequest.getContent());
+    public Task update(Task task) {
         return taskRepository.update(task);
     }
 
-    public Task patch(Task task, boolean finishedFlg) {
-        task.setFinishedFlg(finishedFlg);
+    public Task patch(Task task) {
         return taskRepository.patch(task);
     }
 

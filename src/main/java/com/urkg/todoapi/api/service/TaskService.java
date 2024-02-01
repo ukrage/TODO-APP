@@ -30,23 +30,25 @@ public class TaskService {
         }
     }
 
-    public Task insert(TaskRequest taskRequest) {
-        return taskDomainService.insert(taskRequest);
+    public Task insert(Task task) {
+        return taskDomainService.insert(task);
     }
 
-    public Task update(Long id, TaskRequest taskRequest) {
-        Optional<Task> task = taskDomainService.findById(id);
-        if (task.isPresent()) {
-            return taskDomainService.update(task.get(), taskRequest);
+    public Task update(Task task) {
+        Optional<Task> optionalTask = taskDomainService.findById(task.getId());
+        if (optionalTask.isPresent()) {
+            return taskDomainService.update(task);
         } else {
             throw new TaskNotFoundException("Task not found");
         }
     }
 
-    public Task patch(Long id, boolean finishedFlg) {
-        Optional<Task> task = taskDomainService.findById(id);
-        if (task.isPresent()) {
-            return taskDomainService.patch(task.get(), finishedFlg);
+    public Task patch(Task task) {
+        Optional<Task> optionalTask = taskDomainService.findById(task.getId());
+        if (optionalTask.isPresent()) {
+            task.setTitle(optionalTask.get().getTitle());
+            task.setContent(optionalTask.get().getContent());
+            return taskDomainService.patch(task);
         } else {
             throw new TaskNotFoundException("Task not found");
         }

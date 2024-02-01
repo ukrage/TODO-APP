@@ -33,19 +33,29 @@ public class TaskController {
     public ResponseEntity<Task> create(
             @RequestBody @Valid TaskRequest taskRequest,
             UriComponentsBuilder uriComponentsBuilder) {
-        Task task = taskService.insert(taskRequest);
+        Task task = new Task();
+        task.setTitle(taskRequest.getTitle());
+        task.setContent(taskRequest.getContent());
+        task = taskService.insert(task);
         URI uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(task.getId()).toUri();
         return ResponseEntity.created(uri).body(task);
     }
 
     @PutMapping("/{taskId}")
     public Task update(@PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
-        return taskService.update(taskId, taskRequest);
+        Task task = new Task();
+        task.setId(taskId);
+        task.setTitle(taskRequest.getTitle());
+        task.setContent(taskRequest.getContent());
+        return taskService.update(task);
     }
 
     @PatchMapping("/{taskId}")
     public Task patch(@PathVariable Long taskId, @RequestBody PatchRequest patchRequest) {
-        return taskService.patch(taskId, patchRequest.isFinishedFlg());
+        Task task = new Task();
+        task.setId(taskId);
+        task.setFinishedFlg(patchRequest.isFinishedFlg());
+        return taskService.patch(task);
     }
 
     @DeleteMapping("/{taskId}")
