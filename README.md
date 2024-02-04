@@ -25,9 +25,9 @@ https://ukrage.github.io/todo-app/swagger/
 
 テーブル名：tasks
 
-| カラム名     | データ型         | キー          | 備考      |
-|----------|--------------|-------------|---------|
-| id       | BIGINT       | PRIMARY KEY | ID,自動生成 |
-| title    | VARCHAR(256) |             | タスク名    |
-| content  | VARCHAR(256) |             | タスク詳細   |
-| finished | BOOLEAN      |             | 終了判定    |
+| カラム名        | データ型         | キー          | 備考      |
+|-------------|--------------|-------------|---------|
+| id          | BIGINT       | PRIMARY KEY | ID,自動生成 |
+| title       | VARCHAR(256) |             | タスク名    |
+| content     | VARCHAR(256) |             | タスク詳細   |
+| finishedFlg | BOOLEAN      |             | 終了判定    |
