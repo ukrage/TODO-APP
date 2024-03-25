@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class MovieControllerAdvice {
+public class TaskControllerAdvice {
     //GET 指定したIDが存在しない場合
     @ExceptionHandler(value = TaskNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleTaskNotFoundException(
