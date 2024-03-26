@@ -86,6 +86,18 @@ public class TaskApiTest {
                                         }
                                 """,
                         "default"
+                ),
+                Arguments.arguments(
+                        "/tasks/2",
+                        """
+                                        {
+                                             "id": 2,
+                                             "title": "タスク2",
+                                             "content": "レポートを作成する",
+                                             "finishedFlg": false
+                                         }
+                                """,
+                        "default"
                 )
         );
     }
