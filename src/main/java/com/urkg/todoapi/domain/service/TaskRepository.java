@@ -12,7 +12,7 @@ public interface TaskRepository {
 
     void insert(Task task);
 
-    Task update(Task task);
+    void update(Task task);
 
     Task patch(Task task);
 

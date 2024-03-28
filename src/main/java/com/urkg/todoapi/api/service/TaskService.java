@@ -21,12 +21,7 @@ public class TaskService {
     }
 
     public Task findById(Long id) {
-        Optional<Task> task = taskDomainService.findById(id);
-        if (task.isPresent()) {
-            return task.get();
-        } else {
-            throw new TaskNotFoundException("Task not found");
-        }
+        return taskDomainService.findById(id);
     }
 
     public Task create(Task task) {
@@ -34,31 +29,20 @@ public class TaskService {
     }
 
     public Task update(Task task) {
-        Optional<Task> optionalTask = taskDomainService.findById(task.getId());
-        if (optionalTask.isPresent()) {
-            return taskDomainService.update(task);
-        } else {
-            throw new TaskNotFoundException("Task not found");
-        }
+        return taskDomainService.update(task);
     }
 
     public Task patch(Task task) {
-        Optional<Task> optionalTask = taskDomainService.findById(task.getId());
-        if (optionalTask.isPresent()) {
-            task.setTitle(optionalTask.get().getTitle());
-            task.setContent(optionalTask.get().getContent());
-            return taskDomainService.patch(task);
-        } else {
-            throw new TaskNotFoundException("Task not found");
-        }
+        Task optionalTask = taskDomainService.findById(task.getId());
+
+        task.setTitle(optionalTask.getTitle());
+        task.setContent(optionalTask.getContent());
+        return taskDomainService.patch(task);
     }
 
     public void delete(Long id) {
-        Optional<Task> task = taskDomainService.findById(id);
-        if (task.isPresent()) {
-            taskDomainService.delete(id);
-        } else {
-            throw new TaskNotFoundException("Task not found");
-        }
+        Task task = taskDomainService.findById(id);
+
+        taskDomainService.delete(id);
     }
 }
