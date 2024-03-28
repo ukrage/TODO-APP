@@ -4,7 +4,6 @@ import org.dbunit.Assertion;
 import org.dbunit.DataSourceDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.dataset.csv.CsvURLDataSet;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -44,8 +43,10 @@ public class TaskApiTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(result -> expectedBody.equals(
-                        result.getResponse().getContentAsString()
+                .andExpect(result -> JSONAssert.assertEquals(
+                        expectedBody,
+                        result.getResponse().getContentAsString(),
+                        false
                 ));
 
         var actualDataSet = databaseTester.getConnection().createDataSet();
@@ -109,8 +110,10 @@ public class TaskApiTest {
                                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(result -> expectedBody.equals(
-                        result.getResponse().getContentAsString()
+                .andExpect(result -> JSONAssert.assertEquals(
+                        expectedBody,
+                        result.getResponse().getContentAsString(),
+                        false
                 ));
 
         var actualDataSet = databaseTester.getConnection().createDataSet();
@@ -126,6 +129,7 @@ public class TaskApiTest {
                 Arguments.arguments(
                         "/tasks",
                         """
+                                [
                                         {
                                             "id": 1,
                                             "title": "タスク",
@@ -138,6 +142,7 @@ public class TaskApiTest {
                                             "content": "レポートを作成する",
                                             "finishedFlg": false
                                         }
+                                ]
                                 """,
                         "multi-record"
                 ),
@@ -189,8 +194,10 @@ public class TaskApiTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(result -> expectedBody.equals(
-                        result.getResponse().getContentAsString()
+                .andExpect(result -> JSONAssert.assertEquals(
+                        expectedBody,
+                        result.getResponse().getContentAsString(),
+                        false
                 ));
 
         var actualDataSet = databaseTester.getConnection().createDataSet();
@@ -216,7 +223,7 @@ public class TaskApiTest {
                                   "id": 1,
                                   "title": "タスク1",
                                   "content": "バグを調べる",
-                                  "finished": false
+                                  "finishedFlg": false
                                 }
                                 """
                 )
