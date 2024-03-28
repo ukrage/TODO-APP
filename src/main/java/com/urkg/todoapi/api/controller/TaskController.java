@@ -7,6 +7,7 @@ import com.urkg.todoapi.domain.model.Task;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,7 +32,7 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<Task> create(
-            @RequestBody @Valid TaskRequest taskRequest,
+            @RequestBody @Validated TaskRequest taskRequest,
             UriComponentsBuilder uriComponentsBuilder) {
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
@@ -42,7 +43,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}")
-    public Task update(@PathVariable Long taskId, @RequestBody TaskRequest taskRequest) {
+    public Task update(@PathVariable Long taskId, @RequestBody @Validated TaskRequest taskRequest) {
         Task task = new Task();
         task.setId(taskId);
         task.setTitle(taskRequest.getTitle());
