@@ -34,7 +34,7 @@ public class TaskApiTest {
     @MethodSource("findTestProvider")
     public void findTest(String url, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        URL givenURL = this.getClass().getResource("/data/" + dbPath + "/given/");
+        URL givenURL = this.getClass().getResource("/data/find/" + dbPath + "/given/");
         databaseTester.setDataSet(new CsvURLDataSet(givenURL));
         databaseTester.onSetup();
 
@@ -50,7 +50,7 @@ public class TaskApiTest {
 
         var actualDataSet = databaseTester.getConnection().createDataSet();
         var actualTestTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/" + dbPath + "/expected/");
+        var expectedUrl = this.getClass().getResource("/data/find/" + dbPath + "/expected/");
         var expectedDataSet = new CsvURLDataSet(expectedUrl);
         var expectedTestTable = expectedDataSet.getTable("tasks");
         Assertion.assertEquals(expectedTestTable, actualTestTable);
@@ -74,14 +74,14 @@ public class TaskApiTest {
                                             "finishedFlg": false
                                         }
                                 """,
-                        "find/multi-record"
+                        "multi-record"
                 ),
                 Arguments.arguments(
                         "/tasks",
                         """
                                 []
                                  """,
-                        "find/no-record"
+                        "no-record"
                 ),
                 Arguments.arguments(
                         "/tasks/1",
@@ -93,7 +93,7 @@ public class TaskApiTest {
                                             "finishedFlg": false
                                         }
                                 """,
-                        "find/multi-record"
+                        "multi-record"
                 ),
                 Arguments.arguments(
                         "/tasks/2",
@@ -105,7 +105,72 @@ public class TaskApiTest {
                                              "finishedFlg": false
                                          }
                                 """,
-                        "find/multi-record"
+                        "multi-record"
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("createTestProvider")
+    public void createTest(String requestBody, String expectedBody, String dbPath) throws Exception {
+        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+        var givenUrl = this.getClass().getResource("/data/create/" + dbPath + "/given/");
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/tasks")
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(result -> expectedBody.equals(
+                        result.getResponse().getContentAsString()
+                ));
+
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource("/data/create/" + dbPath + "/expected/");
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
+    private static Stream<Arguments> createTestProvider() {
+        return Stream.of(
+                Arguments.arguments(
+                        """
+                                {
+                                    "title": "task1",
+                                    "content": "APIで追加したタスク"
+                                  }                      
+                                """,
+                        """
+                                {
+                                    "id": 1,
+                                    "title": "task1",
+                                    "content": "APIで追加したタスク",
+                                    "finishedFlg": false
+                                }
+                                """,
+                        "no-record"
+                ),
+                Arguments.arguments(
+                        """
+                                {
+                                    "title": "task3",
+                                    "content": "APIで追加したタスク"
+                                  }                      
+                                """,
+                        """
+                                {
+                                    "id": 3,
+                                    "title": "task3",
+                                    "content": "APIで追加したタスク",
+                                    "finishedFlg": false
+                                }
+                                """,
+                        "multi-record"
                 )
         );
     }
