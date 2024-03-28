@@ -40,6 +40,7 @@ public class TaskApiTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.get(url)
+                                .contentType(MediaType.APPLICATION_JSON)
                                 .accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
