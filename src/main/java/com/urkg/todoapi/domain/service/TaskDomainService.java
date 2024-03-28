@@ -1,6 +1,5 @@
 package com.urkg.todoapi.domain.service;
 
-import com.urkg.todoapi.api.controller.request.TaskRequest;
 import com.urkg.todoapi.domain.model.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class TaskDomainService {
         return taskRepository.findById(id);
     }
 
-    public Task insert(Task task) {
+    public Task create(Task task) {
         task.setFinishedFlg(false);
         return taskRepository.insert(task);
     }

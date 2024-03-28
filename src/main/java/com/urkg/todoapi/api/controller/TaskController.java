@@ -36,7 +36,7 @@ public class TaskController {
         Task task = new Task();
         task.setTitle(taskRequest.getTitle());
         task.setContent(taskRequest.getContent());
-        task = taskService.insert(task);
+        task = taskService.create(task);
         URI uri = uriComponentsBuilder.path("/tasks/{id}").buildAndExpand(task.getId()).toUri();
         return ResponseEntity.created(uri).body(task);
     }
