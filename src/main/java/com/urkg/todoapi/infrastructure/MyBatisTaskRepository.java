@@ -24,9 +24,8 @@ public class MyBatisTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Task insert(Task task) {
+    public void insert(Task task) {
         taskMapper.insert(task);
-        return task;
     }
 
     @Override

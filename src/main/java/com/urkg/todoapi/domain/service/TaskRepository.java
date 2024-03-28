@@ -10,7 +10,7 @@ public interface TaskRepository {
 
     Optional<Task> findById(Long id);
 
-    Task insert(Task task);
+    void insert(Task task);
 
     Task update(Task task);
 

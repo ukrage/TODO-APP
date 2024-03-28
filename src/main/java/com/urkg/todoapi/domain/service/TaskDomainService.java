@@ -22,7 +22,8 @@ public class TaskDomainService {
 
     public Task create(Task task) {
         task.setFinishedFlg(false);
-        return taskRepository.insert(task);
+        taskRepository.insert(task);
+        return task;
     }
 
     public Task update(Task task) {
