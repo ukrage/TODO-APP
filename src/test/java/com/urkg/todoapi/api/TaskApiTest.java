@@ -31,6 +31,71 @@ public class TaskApiTest {
     private DataSource dataSource;
 
     @ParameterizedTest
+    @MethodSource("createTestProvider")
+    public void createTest(String requestBody, String expectedBody, String dbPath) throws Exception {
+        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+        var givenUrl = this.getClass().getResource("/data/create/" + dbPath + "/given/");
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post("/tasks")
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(result -> expectedBody.equals(
+                        result.getResponse().getContentAsString()
+                ));
+
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource("/data/create/" + dbPath + "/expected/");
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
+    private static Stream<Arguments> createTestProvider() {
+        return Stream.of(
+                Arguments.arguments(
+                        """
+                                {
+                                    "title": "task1",
+                                    "content": "APIで追加したタスク"
+                                  }                      
+                                """,
+                        """
+                                {
+                                    "id": 1,
+                                    "title": "task1",
+                                    "content": "APIで追加したタスク",
+                                    "finishedFlg": false
+                                }
+                                """,
+                        "no-record"
+                ),
+                Arguments.arguments(
+                        """
+                                {
+                                    "title": "task3",
+                                    "content": "APIで追加したタスク"
+                                  }                      
+                                """,
+                        """
+                                {
+                                    "id": 3,
+                                    "title": "task3",
+                                    "content": "APIで追加したタスク",
+                                    "finishedFlg": false
+                                }
+                                """,
+                        "multi-record"
+                )
+        );
+    }
+
+    @ParameterizedTest
     @MethodSource("findTestProvider")
     public void findTest(String url, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
@@ -104,71 +169,6 @@ public class TaskApiTest {
                                              "content": "レポートを作成する",
                                              "finishedFlg": false
                                          }
-                                """,
-                        "multi-record"
-                )
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("createTestProvider")
-    public void createTest(String requestBody, String expectedBody, String dbPath) throws Exception {
-        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/create/" + dbPath + "/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
-        databaseTester.onSetup();
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/tasks")
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(result -> expectedBody.equals(
-                        result.getResponse().getContentAsString()
-                ));
-
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/create/" + dbPath + "/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedChannelsTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
-    }
-
-    private static Stream<Arguments> createTestProvider() {
-        return Stream.of(
-                Arguments.arguments(
-                        """
-                                {
-                                    "title": "task1",
-                                    "content": "APIで追加したタスク"
-                                  }                      
-                                """,
-                        """
-                                {
-                                    "id": 1,
-                                    "title": "task1",
-                                    "content": "APIで追加したタスク",
-                                    "finishedFlg": false
-                                }
-                                """,
-                        "no-record"
-                ),
-                Arguments.arguments(
-                        """
-                                {
-                                    "title": "task3",
-                                    "content": "APIで追加したタスク"
-                                  }                      
-                                """,
-                        """
-                                {
-                                    "id": 3,
-                                    "title": "task3",
-                                    "content": "APIで追加したタスク",
-                                    "finishedFlg": false
-                                }
                                 """,
                         "multi-record"
                 )
