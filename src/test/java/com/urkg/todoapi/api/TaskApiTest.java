@@ -175,4 +175,51 @@ public class TaskApiTest {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("updateTestProvider")
+    public void updateTest(String url, String requestBody, String expectedBody) throws Exception {
+        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+        var givenUrl = this.getClass().getResource("/data/update/given/");
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/tasks/" + url)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(result -> expectedBody.equals(
+                        result.getResponse().getContentAsString()
+                ));
+
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource("/data/update/expected/");
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
+    private static Stream<Arguments> updateTestProvider() {
+        return Stream.of(
+                Arguments.arguments(
+                        "1",
+                        """
+                                {
+                                  "title": "タスク1",
+                                  "content": "バグを調べる"
+                                }
+                                    """,
+                        """
+                                {
+                                  "id": 1,
+                                  "title": "タスク1",
+                                  "content": "バグを調べる",
+                                  "finished": false
+                                }
+                                """
+                )
+        );
+    }
 }
