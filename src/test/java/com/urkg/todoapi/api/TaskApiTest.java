@@ -74,7 +74,14 @@ public class TaskApiTest {
                                             "finishedFlg": false
                                         }
                                 """,
-                        "default"
+                        "find/multi-record"
+                ),
+                Arguments.arguments(
+                        "/tasks",
+                        """
+                                []
+                                 """,
+                        "find/no-record"
                 ),
                 Arguments.arguments(
                         "/tasks/1",
@@ -86,7 +93,7 @@ public class TaskApiTest {
                                             "finishedFlg": false
                                         }
                                 """,
-                        "default"
+                        "find/multi-record"
                 ),
                 Arguments.arguments(
                         "/tasks/2",
@@ -98,8 +105,9 @@ public class TaskApiTest {
                                              "finishedFlg": false
                                          }
                                 """,
-                        "default"
+                        "find/multi-record"
                 )
         );
     }
+
 }
