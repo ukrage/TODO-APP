@@ -28,11 +28,11 @@ paths:
                   - id: 1
                     title: hoge
                     content: hogehoge
-                    finished: false
+                    finishedFlg: false
                   - id: 2
                     title: hoge2
                     content: hogehoge2
-                    finished: true
+                    finishedFlg: true
     post:
       summary: "タスク作成"
       description: "タスクを新規作成します"
@@ -188,7 +188,7 @@ components:
         content:
           type: string
           description: "タスクの本文"
-        finished:
+        finishedFlg:
           type: boolean
           description: "タスクの終了判定"
       required:
