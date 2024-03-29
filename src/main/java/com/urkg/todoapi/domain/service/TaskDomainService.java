@@ -55,6 +55,8 @@ public class TaskDomainService {
     }
 
     public void delete(Long id) {
-        taskRepository.delete(id);
+        Task task = findById(id);
+
+        taskRepository.delete(task.getId());
     }
 }

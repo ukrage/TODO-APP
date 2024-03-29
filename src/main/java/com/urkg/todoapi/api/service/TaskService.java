@@ -37,8 +37,6 @@ public class TaskService {
     }
 
     public void delete(Long id) {
-        Task task = taskDomainService.findById(id);
-
         taskDomainService.delete(id);
     }
 }
