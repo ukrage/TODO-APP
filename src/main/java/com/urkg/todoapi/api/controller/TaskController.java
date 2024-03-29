@@ -52,7 +52,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{taskId}")
-    public Task patch(@PathVariable Long taskId, @RequestBody PatchRequest patchRequest) {
+    public Task patch(@PathVariable Long taskId, @RequestBody @Validated PatchRequest patchRequest) {
         Task task = new Task();
         task.setId(taskId);
         task.setFinishedFlg(patchRequest.isFinishedFlg());
