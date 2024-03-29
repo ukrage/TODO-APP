@@ -64,7 +64,7 @@ public class TaskApiTest {
                                 {
                                     "title": "task1",
                                     "content": "APIで追加したタスク"
-                                  }                      
+                                  }             
                                 """,
                         """
                                 {
@@ -154,6 +154,13 @@ public class TaskApiTest {
                         "no-record"
                 ),
                 Arguments.arguments(
+                        "/tasks",
+                        """
+                                []
+                                 """,
+                        "no-record"
+                ),
+                Arguments.arguments(
                         "/tasks/1",
                         """
                                         {
@@ -229,4 +236,54 @@ public class TaskApiTest {
                 )
         );
     }
+
+    @ParameterizedTest
+    @MethodSource("patchTestProvider")
+    public void patchTest(String url, String requestBody, String expectedBody) throws Exception {
+        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+        var givenUrl = this.getClass().getResource("/data/patch/given/");
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.patch("/tasks/" + url)
+                                .content(requestBody)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(result -> JSONAssert.assertEquals(
+                        expectedBody,
+                        result.getResponse().getContentAsString(),
+                        false
+                ));
+
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource("/data/patch/expected/");
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
+    private static Stream<Arguments> patchTestProvider() {
+        return Stream.of(
+                Arguments.arguments(
+                        "1",
+                        """
+                                {
+                                  "finishedFlg": true
+                                }
+                                """,
+                        """
+                                {
+                                    "id": 1,
+                                    "title": "タスク1",
+                                    "content": "バグを調べる",
+                                    "finishedFlg": true
+                                }
+                                """
+                )
+        );
+    }
+
 }
