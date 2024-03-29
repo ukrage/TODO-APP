@@ -239,9 +239,9 @@ public class TaskApiTest {
 
     @ParameterizedTest
     @MethodSource("patchTestProvider")
-    public void patchTest(String url, String requestBody, String expectedBody) throws Exception {
+    public void patchTest(String url, String requestBody, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/patch/given/");
+        var givenUrl = this.getClass().getResource("/data/patch/" + dbPath + "/given/");
         databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
         databaseTester.onSetup();
 
@@ -259,7 +259,7 @@ public class TaskApiTest {
 
         var actualDataSet = databaseTester.getConnection().createDataSet();
         var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/patch/expected/");
+        var expectedUrl = this.getClass().getResource("/data/patch/" + dbPath + "/expected/");
         var expectedDataSet = new CsvURLDataSet(expectedUrl);
         var expectedChannelsTable = expectedDataSet.getTable("tasks");
         Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
@@ -281,7 +281,25 @@ public class TaskApiTest {
                                     "content": "バグを調べる",
                                     "finishedFlg": true
                                 }
-                                """
+                                """,
+                        "true"
+                ),
+                Arguments.arguments(
+                        "1",
+                        """
+                                {
+                                  "finishedFlg": false
+                                }
+                                """,
+                        """
+                                {
+                                    "id": 1,
+                                    "title": "タスク1",
+                                    "content": "バグを調べる",
+                                    "finishedFlg": false
+                                }
+                                """,
+                        "false"
                 )
         );
     }
