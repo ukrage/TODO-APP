@@ -28,7 +28,7 @@ public class TaskDomainService {
 
     public Task create(Task task) {
         task.setFinishedFlg(false);
-        
+
         taskRepository.insert(task);
 
         return task;
@@ -44,8 +44,14 @@ public class TaskDomainService {
         return updatedTask;
     }
 
-    public Task patch(Task task) {
-        return taskRepository.patch(task);
+    public Task patch(Task patchedTask) {
+        Task task = findById(patchedTask.getId());
+        patchedTask.setTitle(task.getTitle());
+        patchedTask.setContent(task.getContent());
+
+        taskRepository.patch(patchedTask);
+
+        return patchedTask;
     }
 
     public void delete(Long id) {

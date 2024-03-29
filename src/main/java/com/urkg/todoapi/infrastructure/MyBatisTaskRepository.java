@@ -34,9 +34,8 @@ public class MyBatisTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Task patch(Task task) {
+    public void patch(Task task) {
         taskMapper.patch(task);
-        return task;
     }
 
     @Override

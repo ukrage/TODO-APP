@@ -33,10 +33,6 @@ public class TaskService {
     }
 
     public Task patch(Task task) {
-        Task optionalTask = taskDomainService.findById(task.getId());
-
-        task.setTitle(optionalTask.getTitle());
-        task.setContent(optionalTask.getContent());
         return taskDomainService.patch(task);
     }
 
