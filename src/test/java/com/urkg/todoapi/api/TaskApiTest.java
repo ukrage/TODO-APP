@@ -286,4 +286,30 @@ public class TaskApiTest {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource("deleteTestProvider")
+    public void deleteTest(String url, String dbPath) throws Exception {
+        IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
+        var givenUrl = this.getClass().getResource("/data/delete/" + dbPath + "/given/");
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/tasks/" + url))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource("/data/delete/" + dbPath + "/expected/");
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
+    private static Stream<Arguments> deleteTestProvider() {
+        return Stream.of(
+                Arguments.arguments("1", "middle"),
+                Arguments.arguments("2", "last")
+        );
+    }
 }
