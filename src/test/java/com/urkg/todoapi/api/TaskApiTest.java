@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.sql.DataSource;
-import java.net.URL;
 import java.util.stream.Stream;
 
 @SpringBootTest
@@ -29,13 +28,26 @@ public class TaskApiTest {
     @Autowired
     private DataSource dataSource;
 
+    private void dbSetUp(IDatabaseTester databaseTester, String givenPath) throws Exception {
+        var givenUrl = this.getClass().getResource(givenPath);
+        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
+        databaseTester.onSetup();
+    }
+
+    private void dbEquals(IDatabaseTester databaseTester, String expectedPath) throws Exception {
+        var actualDataSet = databaseTester.getConnection().createDataSet();
+        var actualChannelsTable = actualDataSet.getTable("tasks");
+        var expectedUrl = this.getClass().getResource(expectedPath);
+        var expectedDataSet = new CsvURLDataSet(expectedUrl);
+        var expectedChannelsTable = expectedDataSet.getTable("tasks");
+        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+    }
+
     @ParameterizedTest
     @MethodSource("createTestProvider")
     public void createTest(String requestBody, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/create/" + dbPath + "/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
-        databaseTester.onSetup();
+        dbSetUp(databaseTester, "/data/create/" + dbPath + "/given/");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post("/tasks")
@@ -49,12 +61,7 @@ public class TaskApiTest {
                         false
                 ));
 
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/create/" + dbPath + "/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedChannelsTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+        dbEquals(databaseTester, "/data/create/" + dbPath + "/expected/");
     }
 
     private static Stream<Arguments> createTestProvider() {
@@ -100,9 +107,7 @@ public class TaskApiTest {
     @MethodSource("findTestProvider")
     public void findTest(String url, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        URL givenURL = this.getClass().getResource("/data/find/" + dbPath + "/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenURL));
-        databaseTester.onSetup();
+        dbSetUp(databaseTester, "/data/find/" + dbPath + "/given/");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.get(url)
@@ -116,12 +121,7 @@ public class TaskApiTest {
                         false
                 ));
 
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualTestTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/find/" + dbPath + "/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedTestTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedTestTable, actualTestTable);
+        dbEquals(databaseTester, "/data/find/" + dbPath + "/expected/");
     }
 
     private static Stream<Arguments> findTestProvider() {
@@ -191,9 +191,7 @@ public class TaskApiTest {
     @MethodSource("updateTestProvider")
     public void updateTest(String url, String requestBody, String expectedBody) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/update/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
-        databaseTester.onSetup();
+        dbSetUp(databaseTester, "/data/update/given/");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.put("/tasks/" + url)
@@ -207,12 +205,7 @@ public class TaskApiTest {
                         false
                 ));
 
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/update/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedChannelsTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+        dbEquals(databaseTester, "/data/update/expected/");
     }
 
     private static Stream<Arguments> updateTestProvider() {
@@ -241,9 +234,7 @@ public class TaskApiTest {
     @MethodSource("patchTestProvider")
     public void patchTest(String url, String requestBody, String expectedBody, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/patch/" + dbPath + "/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
-        databaseTester.onSetup();
+        dbSetUp(databaseTester, "/data/patch/" + dbPath + "/given/");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.patch("/tasks/" + url)
@@ -257,12 +248,7 @@ public class TaskApiTest {
                         false
                 ));
 
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/patch/" + dbPath + "/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedChannelsTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+        dbEquals(databaseTester, "/data/patch/" + dbPath + "/expected/");
     }
 
     private static Stream<Arguments> patchTestProvider() {
@@ -308,20 +294,13 @@ public class TaskApiTest {
     @MethodSource("deleteTestProvider")
     public void deleteTest(String url, String dbPath) throws Exception {
         IDatabaseTester databaseTester = new DataSourceDatabaseTester(dataSource);
-        var givenUrl = this.getClass().getResource("/data/delete/" + dbPath + "/given/");
-        databaseTester.setDataSet(new CsvURLDataSet(givenUrl));
-        databaseTester.onSetup();
+        dbSetUp(databaseTester, "/data/delete/" + dbPath + "/given/");
 
         mockMvc.perform(
                         MockMvcRequestBuilders.delete("/tasks/" + url))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        var actualDataSet = databaseTester.getConnection().createDataSet();
-        var actualChannelsTable = actualDataSet.getTable("tasks");
-        var expectedUrl = this.getClass().getResource("/data/delete/" + dbPath + "/expected/");
-        var expectedDataSet = new CsvURLDataSet(expectedUrl);
-        var expectedChannelsTable = expectedDataSet.getTable("tasks");
-        Assertion.assertEquals(expectedChannelsTable, actualChannelsTable);
+        dbEquals(databaseTester, "/data/delete/" + dbPath + "/expected/");
     }
 
     private static Stream<Arguments> deleteTestProvider() {
